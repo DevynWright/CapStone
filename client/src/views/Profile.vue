@@ -6,9 +6,23 @@
       <div class="col-6">
         <img
           id="profile-picture"
-          src="https://www.pinclipart.com/picdir/middle/211-2118971_happy-face-chalk-png-hope-you-enjoy-my.png"
+          :src="profile.picture"
           alt
+          @click="showPicForm"
         />
+
+
+        <modal name="profilePicModal">
+          <form class="form" @submit.prevent="">
+            <div class="form-group">
+              <input type="file" @change="onPicFileSelected">
+              <button class="btn btn-dark" @click="uploadProfPic">upload</button>
+              <img :src="profPic" height="80" alt="">
+            </div>
+          </form>
+        </modal>
+
+
         <h5 style="color:white">Friends( )</h5>
         <h5 style="color:white">Invites( )</h5>
       </div>
@@ -67,7 +81,8 @@ export default {
         address: "",
         tmh: "",
         userId: this.$route.params.id
-      }
+      },
+      profPic: ''
     };
   },
   methods: {
@@ -95,6 +110,27 @@ export default {
     },
     hideForm() {
       this.$modal.hide("profileModal");
+    },
+    showPicForm() {
+      this.$modal.show("profilePicModal");
+    },
+    hidePicForm() {
+      this.$modal.hide("profilePicModal");
+    },
+    onPicFileSelected(event){
+      let profilePicFile = event.target.files;
+      const fileReader = new FileReader();
+      fileReader.addEventListener('load', () =>{
+      this.profPic = fileReader.result;
+      })
+      fileReader.readAsDataURL(profilePicFile[0])
+      console.log("this is the profil", this.$store.state.profile);
+    },
+    uploadProfPic(){
+      let profile = this.$store.state.profile;
+      profile.picture = this.profPic;
+      this.$store.dispatch("editProfile", profile)
+      console.log("clicked upload pic profile", profile);
     }
   },
   mounted() {

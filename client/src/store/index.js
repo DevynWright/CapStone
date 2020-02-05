@@ -41,6 +41,9 @@ export default new Vuex.Store({
     setProfile(state, profile) {
       state.profile = profile;
     },
+    setProfilePic(state, profilePic) {
+      state.profile.picture = profilePic;
+    },
     resetState(state) {
       state.user = {};
     },
